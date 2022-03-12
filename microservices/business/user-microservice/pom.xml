@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.joserbatista</groupId>
+        <artifactId>microservice-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../_parent-microservice</relativePath>
+    </parent>
+
+    <artifactId>user-microservice</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>user-microservice</name>
+    <description>user-microservice</description>
+
+    <modules>
+        <module>user-microservice-application</module>
+        <module>user-microservice-in-rest-port</module>
+        <module>user-microservice-out-mongo-port</module>
+        <module>user-microservice-core</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.joserbatista.service</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- module dependencies -->
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>user-microservice-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>user-microservice-in-rest-port</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>user-microservice-out-mongo-port</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>user-microservice-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

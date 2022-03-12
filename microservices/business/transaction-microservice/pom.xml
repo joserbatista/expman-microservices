@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.joserbatista</groupId>
+        <artifactId>microservice-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../_parent-microservice</relativePath>
+    </parent>
+
+    <artifactId>transaction-microservice</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>transaction-microservice</name>
+    <description>transaction-microservice</description>
+
+    <modules>
+        <module>transaction-microservice-application</module>
+        <module>transaction-microservice-in-rest-port</module>
+        <module>transaction-microservice-out-mongo-port</module>
+        <module>transaction-microservice-out-rest-account-port</module>
+        <module>transaction-microservice-core</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.joserbatista.service</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- module dependencies -->
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>transaction-microservice-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>transaction-microservice-in-rest-port</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>transaction-microservice-out-mongo-port</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>transaction-microservice-out-rest-account-port</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>transaction-microservice-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

@@ -1,0 +1,7 @@
+spring:
+  mongodb:
+    embedded:
+      version: 4.4.11
+  cloud:
+    loadbalancer:
+      clients:

@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+
+  mongo:
+    container_name: c_mongo
+    image: mongo:4.4.11
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - "expman"
+
+networks:
+  expman:
+    name: expman
+    attachable: true

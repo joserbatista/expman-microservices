@@ -1,0 +1,20 @@
+springdoc:
+  swagger-ui:
+    path: /
+spring:
+  cloud:
+    discovery:
+      enabled: true
+  data:
+    mongodb:
+      auto-index-creation: true
+      database: expman
+      host: localhost
+      port: 27017
+  application:
+    name: import-microservice
+  config:
+    import: optional:configserver:http://localhost:8888
+eureka:
+  instance:
+    prefer-ip-address: true

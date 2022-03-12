@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: gateway-microservice
+  config:
+    import: optional:configserver:http://localhost:8888
+  data:
+    mongodb:
+      auto-index-creation: true
+      database: expman
+      host: localhost
+      port: 27017
+  cloud:
+    discovery:
+      enabled: true
+    gateway:
+      routes:
+        - id: account-microservice
+          uri: lb://ACCOUNT-MICROSERVICE
+          predicates:
+            - Path=/api/user/*/account/**
+        - id: import-microservice
+          uri: lb://IMPORT-MICROSERVICE
+          predicates:
+            - Path=/api/user/*/transaction/import
+        - id: transaction-microservice
+          uri: lb://TRANSACTION-MICROSERVICE
+          predicates:
+            - Path=/api/user/*/transaction/**
+        - id: user-microservice
+          uri: lb://USER-MICROSERVICE
+          predicates:
+            - Path=/api/user/**
+springdoc:
+  swagger-ui:
+    path: /
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway
+eureka:
+  instance:
+    prefer-ip-address: true

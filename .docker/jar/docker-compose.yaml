@@ -1,0 +1,141 @@
+version: "3.9"
+services:
+  # CLOUD
+  configserver-microservice:
+    container_name: configserver-microservice
+    environment:
+      JAVA_OPTS: >
+        -Dspring.profiles.active=aws
+        -Deureka.client.serviceUrl.defaultZone=http://eureka-microservice:8761/eureka
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: config-server-microservice-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8888:8888
+  gateway-microservice:
+    container_name: gateway-microservice
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 10
+    depends_on:
+      - configserver-microservice
+    environment:
+      JAVA_OPTS: >
+        -Dspring.profiles.active=aws
+        -Dspring.config.import=configserver:http://configserver-microservice:8888
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: gateway-microservice-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8080:8080
+  eureka-microservice:
+    container_name: eureka-microservice
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 10
+    depends_on:
+      - configserver-microservice
+    environment:
+      JAVA_OPTS: >
+        -Dspring.profiles.active=aws
+        -Dspring.config.import=configserver:http://configserver-microservice:8888
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: eureka-server-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8761:8761
+  # MS
+  user-microservice:
+    container_name: user-microservice
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 10
+    depends_on:
+      - configserver-microservice
+    environment:
+      JAVA_OPTS: >
+        -Dspring.profiles.active=aws
+        -Dserver.port=8080
+        -Dspring.config.import=configserver:http://configserver-microservice:8888
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: user-microservice-application-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8081:8080
+  account-microservice:
+    container_name: account-microservice
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 10
+    depends_on:
+      - configserver-microservice
+    environment:
+      JAVA_OPTS: >
+        -Dspring.profiles.active=aws
+        -Dserver.port=8080
+        -Dspring.config.import=configserver:http://configserver-microservice:8888
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: account-microservice-application-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8082:8080
+  import-microservice:
+    container_name: import-microservice
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 10
+    depends_on:
+      - configserver-microservice
+    environment:
+      JAVA_OPTS: >
+        -Dspring.profiles.active=aws
+        -Dserver.port=8080
+        -Dspring.config.import=configserver:http://configserver-microservice:8888
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: import-microservice-application-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8083:8080
+  transaction-microservice:
+    container_name: transaction-microservice
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 10
+    depends_on:
+      - configserver-microservice
+    environment:
+      JAVA_OPTS: >
+        -Dspring.profiles.active=aws
+        -Dserver.port=8080
+        -Dspring.config.import=configserver:http://configserver-microservice:8888
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: transaction-microservice-application-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8084:8080
+  mongo:
+    container_name: expman_mongo
+    image: mongo:4.4.11
+    restart: always
+    ports:
+      - 27017:27017

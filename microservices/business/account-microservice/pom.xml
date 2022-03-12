@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.joserbatista</groupId>
+        <artifactId>microservice-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../_parent-microservice</relativePath>
+    </parent>
+
+    <artifactId>account-microservice</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>account-microservice</name>
+    <description>account-microservice</description>
+
+    <modules>
+        <module>account-microservice-application</module>
+        <module>account-microservice-in-rest-port</module>
+        <module>account-microservice-out-mongo-port</module>
+        <module>account-microservice-core</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- module dependencies -->
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>account-microservice-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>account-microservice-in-rest-port</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>account-microservice-out-mongo-port</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.joserbatista</groupId>
+                <artifactId>account-microservice-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

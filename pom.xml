@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.joserbatista</groupId>
+    <artifactId>expman-service-aggregate</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <properties>
+      <sonar.organization>joserbatista</sonar.organization>
+      <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+    <modules>
+        <module>common</module>
+        <module>microservices/business/_parent-microservice</module>
+        <module>microservices/business/account-microservice</module>
+        <module>microservices/business/user-microservice</module>
+        <module>microservices/business/import-microservice</module>
+        <module>microservices/business/transaction-microservice</module>
+        <module>microservices/_cloud/_cloud-parent-microservice</module>
+        <module>microservices/_cloud/config-server-microservice</module>
+        <module>microservices/_cloud/eureka-server-microservice</module>
+        <module>microservices/_cloud/gateway-microservice</module>
+    </modules>
+
+</project>

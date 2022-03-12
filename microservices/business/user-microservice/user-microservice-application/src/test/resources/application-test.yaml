@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      enabled: false
+  mongodb:
+    embedded:
+      version: 4.4.11
+eureka:
+  client:
+    enabled: false
