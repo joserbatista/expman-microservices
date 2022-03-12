@@ -1,0 +1,305 @@
+{
+    "info": {
+        "_postman_id": "bf15899f-dea2-474e-9ccd-b5f7325c59d0",
+        "name": "expman-gateway-import-tests",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "createUser_ValidParameters_Is201",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(201));\r",
+                            "\r",
+                            "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                            "let responseJson = pm.response.json();\r",
+                            "\r",
+                            "pm.collectionVariables.set(\"username\", requestJson.username)\r",
+                            "pm.collectionVariables.set(\"password\", requestJson.password)\r",
+                            "\r",
+                            "pm.test(\"username matches\", () => pm.expect(responseJson.username).to.equal(requestJson.username))\r",
+                            "pm.test(\"email matches\", () => pm.expect(responseJson.email).to.equal(requestJson.email))\r",
+                            "pm.test(\"fullName matches\", () => pm.expect(responseJson.fullname).to.equal(requestJson.fullname))"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "auth": {
+                    "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"username\": \"{{$randomUserName}}\",\n    \"fullName\": \"{{$randomFullName}}\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/user",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "createAccount_ValidParameters_Is201",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(201));\r",
+                            "\r",
+                            "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                            "let responseJson = pm.response.json();\r",
+                            "\r",
+                            "pm.collectionVariables.set(\"account.id\", responseJson.id)\r",
+                            "pm.collectionVariables.set(\"account.name\", responseJson.name)\r",
+                            "\r",
+                            "pm.test(\"name matches\", () => pm.expect(responseJson.name).to.equal(requestJson.name))\r",
+                            "pm.test(\"notes matches\", () => pm.expect(responseJson.notes).to.equal(requestJson.notes))\r",
+                            "pm.test(\"type matches\", () => pm.expect(responseJson.type).to.equal(requestJson.type))\r",
+                            "pm.test(\"active matches\", () => pm.expect(responseJson.active).to.be.true)"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"Wallet\",\n    \"notes\": \"{{$randomBankAccountName}}\",\n    \"type\": \"OTHER\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}/account",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}",
+                        "account"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "import_MultipleRows_Is200",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(201))\r",
+                            "\r",
+                            "let responseJson = pm.response.json()\r",
+                            "let accountId = pm.collectionVariables.get(\"account.id\");\r",
+                            "pm.test(\"Imported two transactions\", () => pm.expect(responseJson.length).to.equal(2))\r",
+                            "pm.test(\"Transaction added to Wallet account\",\r",
+                            "    () => pm.expect(responseJson.some(x => x.accountId == accountId)).to.be.true)"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "multipart/form-data"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "file",
+                            "description": "(Required) ",
+                            "type": "file",
+                            "src": "/E:/projects/expman-microservices/_docs/twoLines.csv"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}/transaction/import",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}",
+                        "transaction",
+                        "import"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "import_InvalidHeader_Is400",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(400))\r",
+                            "\r",
+                            "let responseJson = pm.response.json()\r",
+                            "\r",
+                            "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-400\"))\r",
+                            "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.equal(\"Validation failed\"))\r",
+                            "pm.test(\"errorDescription matches\", () =>\r",
+                            "    pm.expect(responseJson.errorDescription).to.equal(\"Invalid header for import\")\r",
+                            ")"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "multipart/form-data"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "file",
+                            "description": "(Required) ",
+                            "type": "file",
+                            "src": "/E:/projects/expman-microservices/_docs/invalidHeader.csv"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}/transaction/import",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}",
+                        "transaction",
+                        "import"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "auth": {
+        "type": "basic",
+        "basic": [
+            {
+                "key": "password",
+                "value": "{{password}}",
+                "type": "string"
+            },
+            {
+                "key": "username",
+                "value": "{{username}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "localhost:8080",
+            "type": "default"
+        },
+        {
+            "key": "username",
+            "value": ""
+        },
+        {
+            "key": "password",
+            "value": ""
+        },
+        {
+            "key": "account.id",
+            "value": ""
+        },
+        {
+            "key": "account.name",
+            "value": ""
+        }
+    ]
+}

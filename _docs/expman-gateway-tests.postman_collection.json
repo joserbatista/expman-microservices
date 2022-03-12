@@ -1,0 +1,1703 @@
+{
+    "info": {
+        "_postman_id": "44dcdd34-c9b4-40ba-a1fd-7b7ae6d512b4",
+        "name": "expman-gateway-tests",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "user",
+            "item": [
+                {
+                    "name": "createUser_ValidParameters_Is201 Copy",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(201));\r",
+                                    "\r",
+                                    "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.collectionVariables.set(\"username\", requestJson.username)\r",
+                                    "pm.collectionVariables.set(\"password\", requestJson.password)\r",
+                                    "\r",
+                                    "pm.test(\"username matches\", () => pm.expect(responseJson.username).to.equal(requestJson.username))\r",
+                                    "pm.test(\"email matches\", () => pm.expect(responseJson.email).to.equal(requestJson.email))\r",
+                                    "pm.test(\"fullName matches\", () => pm.expect(responseJson.fullname).to.equal(requestJson.fullname))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"username\": \"{{$randomUserName}}\",\n    \"fullName\": \"{{$randomFullName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "createUser_InvalidParameters_Is400",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(400))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-400\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.equal(\"Validation failed\"))\r",
+                                    "pm.test(\"errorDescription matches\", () =>\r",
+                                    "    pm.expect(responseJson.errorDescription).to.contain(\"rejected for field <username>\") &&\r",
+                                    "    pm.expect(responseJson.errorDescription).to.contain(\"rejected for field <email>\")\r",
+                                    ")"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{$randomUUID}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"username\": \"{{$randomUUID}}\",\n    \"fullName\": \"{{$randomFullName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "createUser_Duplicate_Is400",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(400))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-409\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.contain(\"already exists\"))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"username\": \"{{username}}\",\n    \"fullName\": \"{{$randomFullName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateUser_Existing_Is200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200));\r",
+                                    "\r",
+                                    "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.test(\"username matches\",\r",
+                                    "    () => pm.expect(responseJson.username).to.equal(requestJson.username))\r",
+                                    "pm.test(\"email matches\",\r",
+                                    "    () => pm.expect(responseJson.email).to.equal(requestJson.email))\r",
+                                    "pm.test(\"fullName matches\",\r",
+                                    "    () => pm.expect(responseJson.fullname).to.equal(requestJson.fullname))\r",
+                                    "\r",
+                                    "pm.collectionVariables.set(\"password\", requestJson.password)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"username\": \"{{username}}\",\n    \"fullName\": \"{{$randomFullName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateUser_InvalidParameters_Is400",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(400))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-400\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.equal(\"Validation failed\"))\r",
+                                    "pm.test(\"errorDescription matches\", () =>\r",
+                                    "    pm.expect(responseJson.errorDescription).to.contain(\"rejected for field <username>\") &&\r",
+                                    "    pm.expect(responseJson.errorDescription).to.contain(\"rejected for field <email>\")\r",
+                                    ")"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{$randomUUID}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"username\": \"{{$randomUUID}}\",\n    \"fullName\": \"{{$randomFullName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getUser_DifferentUsername_Is403",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(403));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{$randomUserName}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{$randomUserName}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getUser_Unauthorized_Is401",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(401));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getUser_ValidParameters_Is200 Copy",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200));\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.test(\"username matches\",\r",
+                                    "    () => pm.expect(responseJson.username).to.equal(pm.collectionVariables.get(\"username\"))\r",
+                                    ")\r",
+                                    "pm.test(\"email exists\", () => pm.expect(responseJson.email).to.exist)\r",
+                                    "pm.test(\"fullName exists\", () => pm.expect(responseJson.fullName).to.exist)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "account",
+            "item": [
+                {
+                    "name": "createAccount_ValidParameters_Is201",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(201));\r",
+                                    "\r",
+                                    "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.collectionVariables.set(\"account.id\", responseJson.id)\r",
+                                    "pm.collectionVariables.set(\"account.name\", responseJson.name)\r",
+                                    "\r",
+                                    "pm.test(\"name matches\", () => pm.expect(responseJson.name).to.equal(requestJson.name))\r",
+                                    "pm.test(\"notes matches\", () => pm.expect(responseJson.notes).to.equal(requestJson.notes))\r",
+                                    "pm.test(\"type matches\", () => pm.expect(responseJson.type).to.equal(requestJson.type))\r",
+                                    "pm.test(\"active matches\", () => pm.expect(responseJson.active).to.be.true)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"{{$randomBankAccountBic}}\",\n    \"notes\": \"{{$randomBankAccountName}}\",\n    \"type\": \"OTHER\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "createAccount_InvalidParameters_Is400",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(400))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-400\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.equal(\"Validation failed\"))\r",
+                                    "pm.test(\"errorDescription matches\", () =>\r",
+                                    "    pm.expect(responseJson.errorDescription).to.contain(\"rejected\")\r",
+                                    ")"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"{{$randomBankAccountBic}}\",\n    \"notes\": \"{{$randomBankAccountName}}\",\n    \"type\": \"{{$randomWord}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateAccount_Existing_Is200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200));\r",
+                                    "\r",
+                                    "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.collectionVariables.set(\"account.name\", responseJson.name)\r",
+                                    "\r",
+                                    "pm.test(\"id matches\",\r",
+                                    "    () => pm.expect(responseJson.id).to.equal(pm.collectionVariables.get(\"account.id\")))\r",
+                                    "pm.test(\"name matches\", () => pm.expect(responseJson.name).to.equal(requestJson.name))\r",
+                                    "pm.test(\"notes matches\", () => pm.expect(responseJson.notes).to.equal(requestJson.notes))\r",
+                                    "pm.test(\"type matches\", () => pm.expect(responseJson.type).to.equal(requestJson.type))\r",
+                                    "pm.test(\"active matches\", () => pm.expect(responseJson.active).to.be.true)"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"{{$randomBankAccountBic}}\",\n    \"notes\": \"{{$randomBankAccountName}}\",\n    \"type\": \"CREDIT_CARD\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account/{{account.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account",
+                                "{{account.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateAccount_NotExisting_Is404",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(404))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-404\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.contain(\"not found\"))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"{{$randomBankAccountBic}}\",\n    \"notes\": \"{{$randomBankAccountName}}\",\n    \"type\": \"CREDIT_CARD\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account/{{$randomUUID}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account",
+                                "{{$randomUUID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getAccountList_ValidParameters_Is200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200));\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.test(\"size matches\", () => pm.expect(responseJson).to.have.lengthOf(1))\r",
+                                    "\r",
+                                    "let account = responseJson[0]\r",
+                                    "\r",
+                                    "pm.test(\"id matches\",\r",
+                                    "    () => pm.expect(account.id).to.equal(pm.collectionVariables.get(\"account.id\")))\r",
+                                    "pm.test(\"name matches\",\r",
+                                    "    () => pm.expect(account.name).to.equal(pm.collectionVariables.get(\"account.name\")))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "deleteAccount_NotExisting_Is404",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(404))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-404\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.contain(\"not found\"))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "*/*"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account/{{$randomUUID}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account",
+                                "{{$randomUUID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getAccount_ValidParameters_Is200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200));\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.test(\"id matches\",\r",
+                                    "    () => pm.expect(responseJson.id).to.equal(pm.collectionVariables.get(\"account.id\")))\r",
+                                    "pm.test(\"name matches\",\r",
+                                    "    () => pm.expect(responseJson.name).to.equal(pm.collectionVariables.get(\"account.name\")))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account/{{account.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account",
+                                "{{account.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getAccount_NotExisting_Is404",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(404));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/account/{{$randomUUID}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "account",
+                                "{{$randomUUID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getAccount_DifferentUsername_Is403",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(403));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{$randomUserName}}/account/{{account.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{$randomUserName}}",
+                                "account",
+                                "{{account.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getAccount_Unauthorized_Is401",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(401));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{$randomUserName}}/account/{{account.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{$randomUserName}}",
+                                "account",
+                                "{{account.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "transaction",
+            "item": [
+                {
+                    "name": "createTransaction_ValidParameters_Is201",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(201));\r",
+                                    "\r",
+                                    "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.collectionVariables.set(\"transaction.id\", responseJson.id)\r",
+                                    "\r",
+                                    "pm.test(\"date matches\", () => pm.expect(responseJson.date).to.equal(requestJson.date))\r",
+                                    "pm.test(\"amount matches\", () => pm.expect(responseJson.amount).to.equal(requestJson.amount))\r",
+                                    "pm.test(\"note matches\", () => pm.expect(responseJson.note).to.equal(requestJson.note))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"accountId\": \"{{account.id}}\",\n    \"date\": \"2021-10-20T03:33:34.598Z\",\n    \"amount\": {{$randomPrice}},\n    \"tagList\": [\n        \"{{$randomProductMaterial}}\",\n        \"{{$randomProductMaterial}}\",\n        \"{{$randomProductMaterial}}\"\n    ],\n    \"note\": \"{{$randomProductName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "createTransaction_InvalidParameters_Is400",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"accountId\": \"{{account.id}}\",\n    \"date\": \"2021-10-20T03:33:34.598Z\",\n    \"amount\": {{$randomPrice}},\n    \"tagList\": [\n        \"{{$randomWords}}\"\n    ],\n    \"note\": \"{{$randomProductName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateTransaction_Existing_Is200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200));\r",
+                                    "\r",
+                                    "let requestJson = JSON.parse(pm.request.body.raw);\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.test(\"id matches\", () => pm.expect(responseJson.id).to.equal(pm.collectionVariables.get(\"transaction.id\")))\r",
+                                    "pm.test(\"date matches\", () => pm.expect(responseJson.date).to.equal(requestJson.date))\r",
+                                    "pm.test(\"amount matches\", () => pm.expect(responseJson.amount).to.equal(requestJson.amount))\r",
+                                    "pm.test(\"note matches\", () => pm.expect(responseJson.note).to.equal(requestJson.note))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"accountId\": \"{{account.id}}\",\n    \"date\": \"2021-10-20T03:33:34.598Z\",\n    \"amount\": {{$randomPrice}},\n    \"tagList\": [\n        \"{{$randomProductMaterial}}\",\n        \"{{$randomProductMaterial}}\",\n        \"{{$randomProductMaterial}}\"\n    ],\n    \"note\": \"{{$randomProductName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{transaction.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction",
+                                "{{transaction.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateTransaction_NotExisting_Is404",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(404))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-404\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.contain(\"not found\"))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"accountId\": \"{{account.id}}\",\n    \"date\": \"2021-10-20T03:33:34.598Z\",\n    \"amount\": {{$randomPrice}},\n    \"tagList\": [\n        \"{{$randomProductMaterial}}\",\n        \"{{$randomProductMaterial}}\",\n        \"{{$randomProductMaterial}}\"\n    ],\n    \"note\": \"{{$randomProductName}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{$randomUUID}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction",
+                                "{{$randomUUID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "deleteTransaction_NotExisting_Is404 Copy",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(404))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-404\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.contain(\"not found\"))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "*/*"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{$randomUUID}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction",
+                                "{{$randomUUID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getTransactionList_ValidParameters_Is200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200));\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json();\r",
+                                    "\r",
+                                    "pm.test(\"size matches\", () => pm.expect(responseJson).to.have.lengthOf(1))\r",
+                                    "\r",
+                                    "let transaction = responseJson[0]\r",
+                                    "\r",
+                                    "pm.test(\"accountId matches\",\r",
+                                    "    () => pm.expect(transaction.accountId).to.equal(pm.collectionVariables.get(\"account.id\")))\r",
+                                    "pm.test(\"transaction.id matches\",\r",
+                                    "    () => pm.expect(transaction.id).to.equal(pm.collectionVariables.get(\"transaction.id\")))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction?accountNameList={{account.name}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction"
+                            ],
+                            "query": [
+                                {
+                                    "key": "accountNameList",
+                                    "value": "{{account.name}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getTransactionList_MissingFilterParams_Is400",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(400))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-400\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.equal(\"Validation failed\"))\r",
+                                    "pm.test(\"errorDescription matches\", () =>\r",
+                                    "    pm.expect(responseJson.errorDescription).to.equal(\"Filter must not be null\")\r",
+                                    ")"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction",
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getTransaction_NotExisting_Is404",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(404))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-404\"))\r",
+                                    "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.contain(\"not found\"))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{$randomUUID}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction",
+                                "{{$randomUUID}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getTransaction_ValidParameters_Is200",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(200))\r",
+                                    "\r",
+                                    "let responseJson = pm.response.json()\r",
+                                    "\r",
+                                    "pm.test(\"transaction.id matches\",\r",
+                                    "    () => pm.expect(responseJson.id).to.equal(pm.collectionVariables.get(\"transaction.id\")))"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{transaction.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction",
+                                "{{transaction.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getTransaction_DifferentUsername_Is403",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(403));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{$randomUserName}}/transaction/{{transaction.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{$randomUserName}}",
+                                "transaction",
+                                "{{transaction.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getTransaction_Unauthorized_Is401",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code matches\", () => pm.response.to.have.status(401));"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{transaction.id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user",
+                                "{{username}}",
+                                "transaction",
+                                "{{transaction.id}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "deleteTransaction_Existing_Is204",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(204));"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "*/*"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{transaction.id}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}",
+                        "transaction",
+                        "{{transaction.id}}"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "deleteAccount_Existing_Is204",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(204));"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "*/*"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}/account/{{account.id}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}",
+                        "account",
+                        "{{account.id}}"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "getTransaction_Deleted_Is404",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(404))\r",
+                            "\r",
+                            "let responseJson = pm.response.json()\r",
+                            "\r",
+                            "pm.test(\"errorCode matches\", () => pm.expect(responseJson.errorCode).to.equal(\"ERR-404\"))\r",
+                            "pm.test(\"errorMessage matches\", () => pm.expect(responseJson.errorMessage).to.contain(\"not found\"))"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}/transaction/{{$randomUUID}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}",
+                        "transaction",
+                        "{{$randomUUID}}"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "getAccount_Deleted_Is404",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(404));"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}/account/{{account.id}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}",
+                        "account",
+                        "{{account.id}}"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "deleteUser_Existing_Is204",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(204));"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "getUser_Deleted_Is401",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code matches\", () => pm.response.to.have.status(401));"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/user/{{username}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "user",
+                        "{{username}}"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "auth": {
+        "type": "basic",
+        "basic": [
+            {
+                "key": "password",
+                "value": "{{password}}",
+                "type": "string"
+            },
+            {
+                "key": "username",
+                "value": "{{username}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "localhost:8080",
+            "type": "default"
+        },
+        {
+            "key": "username",
+            "value": ""
+        },
+        {
+            "key": "password",
+            "value": ""
+        },
+        {
+            "key": "account.id",
+            "value": ""
+        },
+        {
+            "key": "account.name",
+            "value": ""
+        },
+        {
+            "key": "transaction.id",
+            "value": ""
+        }
+    ]
+}
