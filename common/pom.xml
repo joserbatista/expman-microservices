@@ -16,7 +16,7 @@
         <lombok.version>1.18.22</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <jakarta.version>3.0.1</jakarta.version>
-        <spring-boot.version>2.6.4</spring-boot.version>
+        <spring-boot.version>2.6.6</spring-boot.version>
         <jacoco.version>0.8.7</jacoco.version>
     </properties>
 
